@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Master</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>♟</text></svg>">
+</head>
+<body>
+    <div id="app">
+
+        <!-- Loading -->
+        <div id="loading" class="screen active">
+            <div class="loading-content">
+                <div class="spinner"></div>
+                <p>Loading Chess Master…</p>
+            </div>
+        </div>
+
+        <!-- Menu Screen -->
+        <div id="screen-menu" class="screen">
+            <div class="particles" id="particles-menu"></div>
+            <div class="menu-container">
+                <h1 class="title">CHESS MASTER</h1>
+                <div class="title-underline"></div>
+
+                <div class="elo-badge" id="menu-elo-badge">ELO 1200</div>
+
+                <p class="welcome-text">Welcome back,</p>
+                <p class="player-name" id="menu-player-name">Player</p>
+
+                <label class="input-label">Your Name</label>
+                <input type="text" id="name-input" class="input-box" placeholder="Player" maxlength="20">
+
+                <div class="menu-buttons">
+                    <button class="btn btn-accent" id="btn-vs-bot">Play vs Bot</button>
+                    <button class="btn btn-orange" id="btn-local2p">Local 2-Player</button>
+                    <button class="btn btn-purple" id="btn-scores">Score Card</button>
+                    <button class="btn btn-red" id="btn-quit" style="display:none;">Quit</button>
+                </div>
+
+                <p class="footer-text">Chess Master v2.0 — Web Edition</p>
+            </div>
+        </div>
+
+        <!-- Bot Setup Screen -->
+        <div id="screen-setup" class="screen">
+            <div class="particles" id="particles-setup"></div>
+            <div class="setup-container">
+                <button class="btn btn-small btn-panel" id="btn-setup-back">← Back</button>
+                <h2 class="screen-title">Configure Bot Game</h2>
+
+                <div class="setup-panel">
+                    <h3 class="panel-title">Bot Difficulty</h3>
+                    <p class="panel-desc" id="level-desc">Some challenge</p>
+                    <p class="panel-info" id="level-info">Depth: 3 | ELO ≈ 1200</p>
+                    <div class="level-grid" id="level-grid"></div>
+                </div>
+
+                <div class="setup-panel">
+                    <h3 class="panel-title">Time Control</h3>
+                    <div class="time-grid" id="time-grid"></div>
+                </div>
+
+                <div class="setup-panel">
+                    <h3 class="panel-title">Your Color</h3>
+                    <div class="color-grid">
+                        <button class="btn color-btn selected" id="btn-color-white" data-color="w">
+                            <span class="color-piece">♔</span> White
+                        </button>
+                        <button class="btn color-btn" id="btn-color-black" data-color="b">
+                            <span class="color-piece">♚</span> Black
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn btn-accent btn-large" id="btn-start-game">Start Game</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="screen-game" class="screen">
+            <div class="game-layout">
+                <div class="board-section">
+                    <button class="btn btn-small btn-panel" id="btn-game-menu">← Menu</button>
+
+                    <!-- Top clock (opponent) -->
+                    <div class="clock-bar" id="clock-top">
+                        <span class="clock-dot" id="dot-top"></span>
+                        <span class="clock-name" id="name-top">Opponent</span>
+                        <span class="clock-time" id="time-top">--:--</span>
+                    </div>
+
+                    <!-- Board -->
+                    <div id="board"></div>
+
+                    <!-- Bottom clock (player) -->
+                    <div class="clock-bar" id="clock-bottom">
+                        <span class="clock-dot" id="dot-bottom"></span>
+                        <span class="clock-name" id="name-bottom">Player</span>
+                        <span class="clock-time" id="time-bottom">--:--</span>
+                    </div>
+                </div>
+
+                <div class="sidebar">
+                    <!-- Move log -->
+                    <div class="panel move-log-panel">
+                        <div class="panel-header">Move History</div>
+                        <div class="move-log" id="move-log"></div>
+                    </div>
+
+                    <!-- Bot info -->
+                    <div class="panel bot-info-panel" id="bot-info" style="display:none;">
+                        <div class="bot-accent"></div>
+                        <div class="bot-details">
+                            <span class="bot-label">OPPONENT</span>
+                            <span class="bot-name" id="bot-name">Bot · Medium</span>
+                            <span class="bot-meta" id="bot-meta">ELO ≈ 1200 • Depth 3</span>
+                        </div>
+                        <span class="thinking-indicator hidden" id="thinking">Thinking…</span>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="action-buttons">
+                        <button class="btn btn-red btn-action" id="btn-resign">Resign</button>
+                        <button class="btn btn-panel btn-action" id="btn-draw">Draw</button>
+                        <button class="btn btn-panel btn-action" id="btn-new-game">New Game</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Screen -->
+        <div id="screen-scores" class="screen">
+            <div class="particles" id="particles-scores"></div>
+            <div class="scores-container">
+                <button class="btn btn-small btn-panel" id="btn-scores-back">← Back</button>
+                <h2 class="screen-title">Score Card</h2>
+
+                <div class="elo-badge elo-large" id="scores-elo">ELO 1200</div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>vs Bot</h4>
+                        <div class="stat-row"><span>Played</span><span id="bot-played">0</span></div>
+                        <div class="stat-row green"><span>Wins</span><span id="bot-wins">0</span></div>
+                        <div class="stat-row red"><span>Losses</span><span id="bot-losses">0</span></div>
+                        <div class="stat-row gold"><span>Draws</span><span id="bot-draws">0</span></div>
+                        <div class="stat-row dim"><span>Win Rate</span><span id="bot-winrate">0%</span></div>
+                        <div class="stat-bar"><div class="stat-bar-fill green-bg" id="bot-bar-w"></div><div class="stat-bar-fill red-bg" id="bot-bar-l"></div></div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>vs Human</h4>
+                        <div class="stat-row"><span>Played</span><span id="human-played">0</span></div>
+                        <div class="stat-row green"><span>Wins</span><span id="human-wins">0</span></div>
+                        <div class="stat-row red"><span>Losses</span><span id="human-losses">0</span></div>
+                        <div class="stat-row gold"><span>Draws</span><span id="human-draws">0</span></div>
+                        <div class="stat-row dim"><span>Win Rate</span><span id="human-winrate">0%</span></div>
+                        <div class="stat-bar"><div class="stat-bar-fill green-bg" id="human-bar-w"></div><div class="stat-bar-fill red-bg" id="human-bar-l"></div></div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>General</h4>
+                        <div class="stat-row"><span>Total Games</span><span id="total-games">0</span></div>
+                        <div class="stat-row"><span>Total Moves</span><span id="total-moves">0</span></div>
+                        <div class="stat-row"><span>Fastest Win</span><span id="fastest-win">-</span></div>
+                        <div class="stat-row"><span>Longest Game</span><span id="longest-game">0</span></div>
+                    </div>
+                </div>
+
+                <h3 class="history-title">Game History</h3>
+                <div class="history-table" id="history-table">
+                    <div class="history-header">
+                        <span>Date</span><span>Opponent</span><span>Result</span><span>Moves</span><span>ELO Δ</span>
+                    </div>
+                    <div class="history-body" id="history-body"></div>
+                </div>
+
+                <button class="btn btn-red btn-small" id="btn-reset-scores" style="margin-top:16px;">Reset Scores</button>
+            </div>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div id="overlay-gameover" class="overlay hidden">
+            <div class="overlay-bg"></div>
+            <div class="gameover-box">
+                <div class="gameover-glow"></div>
+                <div class="gameover-icon" id="gameover-icon">♔</div>
+                <h2 class="gameover-title" id="gameover-title">WHITE WINS</h2>
+                <p class="gameover-reason" id="gameover-reason">Checkmate</p>
+                <p class="gameover-moves" id="gameover-moves">Moves: 0</p>
+                <p class="gameover-elo" id="gameover-elo">Your ELO: 1200</p>
+                <div class="gameover-divider"></div>
+                <p class="gameover-continue">Click anywhere to continue</p>
+            </div>
+        </div>
+
+        <!-- Promotion Overlay -->
+        <div id="overlay-promotion" class="overlay hidden">
+            <div class="overlay-bg"></div>
+            <div class="promotion-box">
+                <h3>Choose Promotion</h3>
+                <div class="promotion-options" id="promotion-options"></div>
+            </div>
+        </div>
+
+        <!-- Toast container -->
+        <div id="toast-container"></div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="bot.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
