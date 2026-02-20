@@ -1,0 +1,27 @@
+{
+  "player_name": "Splex",
+  "elo": 1169,
+  "vs_bot": {
+    "wins": 0,
+    "losses": 1,
+    "draws": 0
+  },
+  "vs_human": {
+    "wins": 0,
+    "losses": 0,
+    "draws": 0
+  },
+  "total_games": 1,
+  "total_moves": 10,
+  "fastest_win_moves": null,
+  "longest_game_moves": 10,
+  "history": [
+    {
+      "date": "2026-02-20 22:15",
+      "opponent": "Bot (Novice)",
+      "result": "loss",
+      "moves": 10,
+      "elo_change": -31
+    }
+  ]
+}
