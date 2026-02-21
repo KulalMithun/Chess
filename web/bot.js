@@ -168,7 +168,9 @@ const ChessBot = (() => {
             return moves[Math.floor(Math.random() * moves.length)];
         }
 
-        const maximizing = game.turn() === 'w';
+        // Work on a copy so timeouts don't corrupt the real game state
+        const gameCopy = new Chess(game.fen());
+        const maximizing = gameCopy.turn() === 'w';
         const deadline = Date.now() + config.time;
         let bestMove = moves[0];
 
@@ -177,10 +179,10 @@ const ChessBot = (() => {
                 let candidateMove = null;
                 let candidateVal = maximizing ? -99999 : 99999;
 
-                for (const move of orderMoves(game)) {
-                    game.move(move.san);
-                    const val = minimax(game, d - 1, -99999, 99999, !maximizing, deadline);
-                    game.undo();
+                for (const move of orderMoves(gameCopy)) {
+                    gameCopy.move(move.san);
+                    const val = minimax(gameCopy, d - 1, -99999, 99999, !maximizing, deadline);
+                    gameCopy.undo();
 
                     if (maximizing && val > candidateVal) {
                         candidateVal = val;

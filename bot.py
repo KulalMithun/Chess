@@ -99,9 +99,13 @@ def _evaluate(board: chess.Board) -> int:
 
     if board.turn == chess.WHITE:
         score += len(list(board.legal_moves)) * 5
-    else:
         board.push(chess.Move.null())
         score -= len(list(board.legal_moves)) * 5
+        board.pop()
+    else:
+        score -= len(list(board.legal_moves)) * 5
+        board.push(chess.Move.null())
+        score += len(list(board.legal_moves)) * 5
         board.pop()
 
     return score

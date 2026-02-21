@@ -435,10 +435,14 @@ class GameScreen:
         self._bot_thinking = True
 
         def worker():
-            board_copy = self.board.copy()
-            move = self.bot.get_move(board_copy)
-            self._apply_bot_move(move)
-            self._bot_thinking = False
+            try:
+                board_copy = self.board.copy()
+                move = self.bot.get_move(board_copy)
+                self._apply_bot_move(move)
+            except Exception:
+                pass
+            finally:
+                self._bot_thinking = False
 
         self._bot_thread = threading.Thread(target=worker, daemon=True)
         self._bot_thread.start()
@@ -672,6 +676,10 @@ class GameScreen:
     def draw(self):
         self._clock.update()
         self._clock_flagged()
+
+        if (self._is_bot_turn() and not self._bot_thinking
+                and not self.game_over):
+            self._trigger_bot_move()
 
         draw_gradient_bg(self.screen)
 
